@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "description": "Load Monitoring Web Application",
   "scripts": {
-    "start:client": "cd client && yarn start",
-    "start:server": "cd server && yarn start"
+    "start": "node index.js"
   },
   "author": "Giuseppe Leo",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
