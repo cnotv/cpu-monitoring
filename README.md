@@ -1,6 +1,6 @@
 # Load Monitoring Web Application
 
-Display 
+Display CPU high load values.
 
 ## Start project
 
@@ -29,9 +29,15 @@ One of the main reason of this choice is, due to the small bundling size, possib
 The configuration is a simple express RestAPI served though Express.
 No error handling is set.
 
+## Further implementations
+
 Given more information about the scope of the project:
 
+- Use existing UI Kit if any
+- Include error loggings
+- Add proper mocking libraries
+- Add module federation, if Microfrontend
+- Set Web Worker to avoid continuous scripts on the main thread
 - It may be bundled with Electron or such like, to create a desktop application
 - It may be configured as single common package.json to optimize caching on installation
-- Include error loggings
   
