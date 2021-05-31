@@ -1,16 +1,11 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
-interface ChartValues {
-  time: number;
-  value: number;
-}
-
 interface ChartProps {
-  loadData: ChartValues[];
+  data: ChartValues[];
   threshold: number;
 }
 
-function Chart({ loadData, threshold }: ChartProps) {
+function Chart({ data, threshold }: ChartProps) {
   return (
     <div>
       <h3>Last 30 minutes</h3>
@@ -18,7 +13,7 @@ function Chart({ loadData, threshold }: ChartProps) {
         <LineChart
           width={700}
           height={300}
-          data={loadData}
+          data={data}
         >
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis dataKey='time' label={{ value: 'Time', position: 'insideBottomRight', offset: '-5' }} />

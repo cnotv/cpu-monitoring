@@ -2,7 +2,7 @@ import './Logs.css'
 
 interface LogsProps {
   title: string;
-  logs: string[];
+  logs: ChartValues[];
   note?: string;
 }
 
@@ -12,8 +12,8 @@ function Logs({ title, logs, note }: LogsProps) {
       <h3>{ title }<span>{logs.length}</span></h3>
 
       <ol>
-        {logs.map((val, i) =>
-          <li key={i}>{val}</li>
+        {logs.map((log, i) =>
+          <li key={i}>{log.value}</li>
         )}
       </ol>
 

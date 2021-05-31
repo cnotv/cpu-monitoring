@@ -6,12 +6,12 @@ import Logs from './components/Logs';
 
 function App() {
   const threshold = 1;
-  const [ current, setCurrent ] = useState(0);
-  const [ loadData, setLoadData ] = useState([]);
-  const [ heavyLog, setHeavyLog ] = useState([]);
-  const [ recoveredLog, setRecoveredLog ] = useState([]);
-  const [ isHeavy, setIsHeavy ] = useState(false);
-  const [isRecovered, setIsRecovered] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [cpuData, setCpuData] = useState<ChartValues[]>([]);
+  const [heavyLog, setHeavyLog] = useState<ChartValues[]>([]);
+  const [recoveredLog, setRecoveredLog] = useState<ChartValues[]>([]);
+  const [isHeavy, setIsHeavy] = useState<boolean>(false);
+  const [isRecovered, setIsRecovered] = useState<boolean>(false);
 
   return (
     <main className="dashboard">
@@ -23,7 +23,7 @@ function App() {
       <section className="dashboard__grid">
         <Card>
           <Chart
-            loadData={loadData}
+            data={cpuData}
             threshold={threshold}
           ></Chart>
         </Card>
