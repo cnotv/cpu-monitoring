@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
 
 interface ChartProps {
   data: ChartValues[];
@@ -10,18 +10,37 @@ function Chart({ data, threshold }: ChartProps) {
     <div>
       <h3>Last 30 minutes</h3>
       <ResponsiveContainer width="99%" height={300}>
-        <LineChart
+        <AreaChart
           width={700}
           height={300}
           data={data}
         >
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='time' label={{ value: 'Time', position: 'insideBottomRight', offset: '-5' }} />
-          <YAxis dataKey='value' label={{ value: 'High Load', angle: -90, position: 'insideLeft', offset: '10' }} />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey='time'
+            label={{
+              value: 'Time',
+              position: 'insideBottomRight',
+              offset: '-5'
+            }}
+          />
+          <YAxis
+            dataKey='value'
+            label={{
+              value: 'High Load',
+              angle: -90,
+              position: 'insideLeft',
+              offset: '0'
+            }} />
           <Tooltip />
           <ReferenceLine y={threshold} stroke="red" />
-          <Line type='monotone' dataKey='value' stroke='#82ca9d' />
-        </LineChart>
+          <Area
+            type="monotone"
+            dataKey="value"
+            stroke="white"
+            fill="green"
+          />
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   )
