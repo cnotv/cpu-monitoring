@@ -1,45 +1,17 @@
+import { useState } from 'react';
 import './App.css';
 import Card from './components/Card';
 import Chart from './components/Chart';
 import Logs from './components/Logs';
 
 function App() {
-  const current = 1;
-  const loadData = [
-    {
-      time: 1,
-      value: 1
-    },
-    {
-      time: 2,
-      value: 2
-    },
-    {
-      time: 3,
-      value: 1
-    },
-    {
-      time: 4,
-      value: 3
-    }
-  ];
-
-  const heavyLog = [
-    '31.05.2021 - 3pm',
-    '31.05.2021 - 3pm',
-    '31.05.2021 - 3pm',
-  ]
-
-  const recoveredLog = [
-    '31.05.2021 - 3pm',
-    '31.05.2021 - 3pm',
-    '31.05.2021 - 3pm',
-    '31.05.2021 - 3pm',
-  ]
-
   const threshold = 1;
-  const isHeavy = false;
-  const isRecovered = true;
+  const [ current, setCurrent ] = useState(0);
+  const [ loadData, setLoadData ] = useState([]);
+  const [ heavyLog, setHeavyLog ] = useState([]);
+  const [ recoveredLog, setRecoveredLog ] = useState([]);
+  const [ isHeavy, setIsHeavy ] = useState(false);
+  const [isRecovered, setIsRecovered] = useState(false);
 
   return (
     <main className="dashboard">
