@@ -9,14 +9,14 @@ interface CardProps {
 
 function Card({ children, isActive, type, note }: CardProps) {
   const typeClassMap = {
-    'error': 'card--error',
-    'correct': 'card--correct'
+    'error': ' card--error',
+    'correct': ' card--correct'
   }
   const typeClass = type ? typeClassMap[type] : '';
-  const activeClass = isActive ? 'card__active' : '';
+  const activeClass = isActive ? ' card--active' : '';
 
   return (
-    <div className={'card ' + typeClass + activeClass}>
+    <div className={'card' + typeClass + activeClass}>
       {children}
       {note &&
         <div className="card__note">
