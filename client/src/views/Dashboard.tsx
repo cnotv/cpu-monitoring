@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './Dashboard.css';
 import Card from '../components/Card';
 import Chart from '../components/Chart';
 import Logs from '../components/Logs';
+import { getCpu } from '../utilities/Api';
+
+import { cpuLogSize, cpuCheckInterval, getNewLogs } from '../utilities/Cpu';
+
+let logs: ChartValues[] = [];
 
 function Dashboard() {
   const threshold = 1;
@@ -14,6 +19,31 @@ function Dashboard() {
   const [recoveredLog, setRecoveredLog] = useState<ChartValues[]>([]);
   const [isHeavy, setIsHeavy] = useState<boolean>(false);
   const [isRecovered, setIsRecovered] = useState<boolean>(false);
+
+  const updateDashboard = async (): Promise<void> => {
+    await getCpu().then(
+      value => {
+        const input = { value, time: new Date().toLocaleString() };
+        const newLogs = getNewLogs(logs, input, cpuLogSize);
+        logs = newLogs;
+        setCurrent(value);
+        setCpuData(newLogs);
+        setHeavyLog(newLogs);
+        setRecoveredLog(newLogs);
+        setIsHeavy(true);
+        setIsRecovered(true);
+      }
+    );
+  }
+
+  useEffect(() => {
+    const startCheck = setInterval(updateDashboard, cpuCheckInterval * 500);
+    updateDashboard()
+
+    return () => {
+      clearTimeout(startCheck)
+    }
+  }, [])
 
   return (
     <main className="dashboard">
