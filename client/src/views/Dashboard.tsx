@@ -6,41 +6,60 @@ import Chart from '../components/Chart';
 import Logs from '../components/Logs';
 import { getCpu } from '../utilities/Api';
 
-import { cpuLogSize, cpuCheckInterval, getNewLogs } from '../utilities/Cpu';
+import { cpuLogSize, cpuCheckInterval, getNewLogs, cpuThreshold } from '../utilities/Cpu';
 
-let logs: ChartValues[] = [];
+// Initialize log
+let logs: ChartValues[] = Array(cpuLogSize).fill({});
+let heavy: ChartValues[] = [];
+let recovered: ChartValues[] = [];
 
 function Dashboard() {
   const threshold = 1;
-  
+
   const [current, setCurrent] = useState(0);
-  const [cpuData, setCpuData] = useState<ChartValues[]>([]);
-  const [heavyLog, setHeavyLog] = useState<ChartValues[]>([]);
-  const [recoveredLog, setRecoveredLog] = useState<ChartValues[]>([]);
   const [isHeavy, setIsHeavy] = useState<boolean>(false);
   const [isRecovered, setIsRecovered] = useState<boolean>(false);
 
+  /**
+   * Calculate all the required values, based on the single request
+   */
   const updateDashboard = async (): Promise<void> => {
     await getCpu().then(
       value => {
-        const input = { value, time: new Date().toLocaleString() };
-        const newLogs = getNewLogs(logs, input, cpuLogSize);
-        logs = newLogs;
         setCurrent(value);
-        setCpuData(newLogs);
-        setHeavyLog(newLogs);
-        setRecoveredLog(newLogs);
-        setIsHeavy(true);
-        setIsRecovered(true);
+        const newLog = { value, time: new Date().toLocaleString() };
+        logs = getNewLogs(logs, newLog, cpuLogSize);
+
+        const higher = value > threshold;
+        const latest = logs.slice(0, cpuThreshold);
+
+        if (higher) {
+          setIsRecovered(false);
+          const isHeavyActive = latest.every(log => log.value > threshold);
+          if (isHeavyActive) {
+            heavy = [...heavy, newLog]
+            setIsHeavy(true);
+          }
+        } else {
+          setIsHeavy(false);
+          const isRecoveredActive = latest.every(log => log.value < threshold);
+          setIsHeavy(false);
+          // Set it recovered, only if it has been an heavy load
+          if (isRecoveredActive && heavy.length) {
+            recovered = [...recovered, newLog]
+            setIsRecovered(true);
+          }
+        }
       }
     );
   }
 
   useEffect(() => {
-    const startCheck = setInterval(updateDashboard, cpuCheckInterval * 500);
+    const startCheck = setInterval(updateDashboard, cpuCheckInterval * 1000);
     updateDashboard()
 
     return () => {
+      // Remove timeout on destroy, to prevent memory leaks
       clearTimeout(startCheck)
     }
   }, [])
@@ -55,7 +74,7 @@ function Dashboard() {
       <section className="dashboard__grid">
         <Card>
           <Chart
-            data={cpuData}
+            data={logs}
             threshold={threshold}
           ></Chart>
         </Card>
@@ -67,7 +86,7 @@ function Dashboard() {
         >
           <Logs
             title="Heavy Loads: "
-            logs={heavyLog}
+            logs={heavy}
           ></Logs>
         </Card>
 
@@ -78,7 +97,7 @@ function Dashboard() {
         >
           <Logs
             title="Recovered: "
-            logs={recoveredLog}
+            logs={recovered}
           ></Logs>
         </Card>
       </section>

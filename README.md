@@ -33,7 +33,10 @@ No error handling is set.
 
 Given more information about the scope of the project:
 
+- Add distribution configuration
+- Correct/rethink time label
 - Use existing UI Kit if any
+- Probably find a better overload/recover UI, e.g.: another type of chart
 - Include error loggings
 - Add proper mocking libraries
 - Add module federation, if Microfrontend
