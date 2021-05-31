@@ -5,9 +5,18 @@ describe('FX: getNewLogs', () => {
     const list = [1];
     const value = 2
 
-    const result = getNewLogs(list, value, list.length);
+    const result = getNewLogs(list, value, 2);
 
-    expect(result.length).toBe(1)
+    expect(result.length).toBe(2)
+  })
+
+  it(`should remove exceeding entries`, () => {
+    const list = [1, 2];
+    const value = 2
+
+    const result = getNewLogs(list, value, 2);
+
+    expect(result.length).toBe(2)
   })
 
   it(`should return an empty list if delimiter is 0`, () => {

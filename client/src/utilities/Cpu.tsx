@@ -11,17 +11,17 @@ export const cpuThreshold = cpuConsideredLength * 60 / cpuCheckInterval;
 /**
  * Return a new log based on log value and new retrieved value
  * (it's basically an immutable splice which you can get from other libraries)
- * @param log 
- * @param value 
+ * @param logs
+ * @param newLog 
  * @returns 
  */
-export function getNewLogs<T>(log: T[], value: T, delimiter: number): T[] {
+export function getNewLogs<T>(logs: T[], newLog: T, delimiter: number): T[] {
   if (delimiter === 0) {
     return []
   };
 
   return [
-    value,
-    ...log.slice(0, delimiter -1),
+    newLog,
+    ...logs.slice(0, delimiter -1),
   ]
 }
