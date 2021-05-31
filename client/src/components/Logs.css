@@ -2,3 +2,8 @@
   font-size: 12px;
   margin-top: auto;
 }
+
+.logs__entries {
+  max-height: 250px;
+  overflow-y: auto;
+}

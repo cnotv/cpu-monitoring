@@ -11,9 +11,11 @@ function Logs({ title, logs, note }: LogsProps) {
     <div>
       <h3>{title}<span>{logs.length}</span></h3>
 
-      {logs.map((log, i) =>
-        <p key={i}>{log.time} - {log.value}</p>
-      )}
+      <div className="logs__entries">
+        {logs.map((log, i) =>
+          <p key={i}>{log.time} - {log.value}</p>
+        )}
+      </div>
 
       {note &&
         <div className="logs__note">
