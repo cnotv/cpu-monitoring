@@ -9,13 +9,11 @@ interface LogsProps {
 function Logs({ title, logs, note }: LogsProps) {
   return (
     <div>
-      <h3>{ title }<span>{logs.length}</span></h3>
+      <h3>{title}<span>{logs.length}</span></h3>
 
-      <ol>
-        {logs.map((log, i) =>
-          <li key={i}>{log.value}</li>
-        )}
-      </ol>
+      {logs.map((log, i) =>
+        <p key={i}>{log.time} - {log.value}</p>
+      )}
 
       {note &&
         <div className="logs__note">
