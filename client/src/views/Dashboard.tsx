@@ -4,54 +4,18 @@ import './Dashboard.css';
 import Card from '../components/Card';
 import Chart from '../components/Chart';
 import Logs from '../components/Logs';
-import { getCpu } from '../utilities/Api';
+import { getCpuStats, initCpuStats } from '../utilities/Api';
 
-import { cpuLogSize, cpuCheckInterval, getNewLogs, cpuThreshold } from '../utilities/Cpu';
-
-// Initialize log
-let logs: ChartValues[] = Array(cpuLogSize).fill({});
-let heavy: ChartValues[] = [];
-let recovered: ChartValues[] = [];
+import { cpuCheckInterval,cpuThresholdValue } from '../utilities/Cpu';
 
 function Dashboard() {
-  const threshold = 1;
-
-  const [current, setCurrent] = useState(0);
-  const [isHeavy, setIsHeavy] = useState<boolean>(false);
-  const [isRecovered, setIsRecovered] = useState<boolean>(false);
+  const [cpuStats, setCpuStats] = useState<CpuStats>(initCpuStats);
 
   /**
    * Calculate all the required values, based on the single request
    */
   const updateDashboard = async (): Promise<void> => {
-    await getCpu().then(
-      value => {
-        setCurrent(value);
-        const newLog = { value, time: new Date().toLocaleString() };
-        logs = getNewLogs(logs, newLog, cpuLogSize);
-
-        const higher = value > threshold;
-        const latest = logs.slice(0, cpuThreshold);
-
-        if (higher) {
-          setIsRecovered(false);
-          const isHeavyActive = latest.every(log => log.value > threshold);
-          if (isHeavyActive) {
-            heavy = [...heavy, newLog]
-            setIsHeavy(true);
-          }
-        } else {
-          setIsHeavy(false);
-          const isRecoveredActive = latest.every(log => log.value < threshold);
-          setIsHeavy(false);
-          // Set it recovered, only if it has been an heavy load
-          if (isRecoveredActive && heavy.length) {
-            recovered = [...recovered, newLog]
-            setIsRecovered(true);
-          }
-        }
-      }
-    );
+    setCpuStats(await getCpuStats(initCpuStats.logs))
   }
 
   useEffect(() => {
@@ -68,36 +32,36 @@ function Dashboard() {
     <main className="dashboard">
       <section className="dashboard__current">
         <h1>CPUs Heavy Loads</h1>
-        <div className="dashboard__counter">{current}</div>
+        <div className="dashboard__counter">{cpuStats.current}</div>
       </section>
 
       <section className="dashboard__grid">
         <Card>
           <Chart
-            data={logs}
-            threshold={threshold}
+            data={cpuStats.logs.cpu}
+            threshold={cpuThresholdValue}
           ></Chart>
         </Card>
 
         <Card
           type="error"
-          isActive={isHeavy}
+          isActive={cpuStats.isHeavy}
           note="Note: A CPU is considered under high average load when it has exceeded 1 for 2 minutes or more"
         >
           <Logs
             title="Heavy Loads: "
-            logs={heavy}
+            logs={cpuStats.logs.heavy}
           ></Logs>
         </Card>
 
         <Card
           type="correct"
-          isActive={isRecovered}
+          isActive={cpuStats.isRecovered}
           note="Note: A CPU is considered recovered from high average load when it drops below 1 for 2 minutes or more."
         >
           <Logs
             title="Recovered: "
-            logs={recovered}
+            logs={cpuStats.logs.recovered}
           ></Logs>
         </Card>
       </section>
@@ -105,4 +69,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default Dashboard;

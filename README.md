@@ -33,14 +33,17 @@ No error handling is set.
 
 Given more information about the scope of the project:
 
-- Add distribution configuration
-- Correct/rethink time label
-- Use existing UI Kit if any
-- Probably find a better overload/recover UI, e.g.: another type of chart
-- Include error loggings
-- Add proper mocking libraries
-- Add module federation, if Microfrontend
+- Reverse log chart incremental
+- Correct or remove time label
+- Correct/rethink time label for CPU logs
+- Use existing UI Kit, if any
+- Find a better overload/recover UI, e.g.: another type of chart
+- Include error loggings for async requests
+- Add app distribution for CI
+- Add env configuration
+- Set CORS configuration accordingly
+- Add proper mocking libraries for testing
 - Set Web Worker to avoid continuous scripts on the main thread
+- Add module federation, if Microfrontend
 - It may be bundled with Electron or such like, to create a desktop application
-- It may be configured as single common package.json to optimize caching on installation
   
