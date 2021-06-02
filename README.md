@@ -33,17 +33,19 @@ No error handling is set.
 
 Given more information about the scope of the project:
 
-- Reverse log chart incremental
-- Correct or remove time label
-- Correct/rethink time label for CPU logs
-- Use existing UI Kit, if any
-- Find a better overload/recover UI, e.g.: another type of chart
-- Include error loggings for async requests
-- Add app distribution for CI
-- Add env configuration
-- Set CORS configuration accordingly
-- Add proper mocking libraries for testing
-- Set Web Worker to avoid continuous scripts on the main thread
-- Add module federation, if Microfrontend
-- It may be bundled with Electron or such like, to create a desktop application
-  
+- Config
+  - Add env or endpoint configuration, to change logging parameters as a real scenario
+  - Add app distribution for CI
+  - Set CORS configuration accordingly
+  - Add module federation, if Microfrontend
+  - It may be bundled with Electron or such like, to create a desktop application
+- Code quality
+  - Include error loggings for async requests
+  - Add proper mocking libraries for testing
+  - Set Web Worker to avoid continuous scripts on the main thread
+- Cosmetic
+  - Reverse log chart incremental
+  - Correct or remove time label in the chart
+  - Correct/rethink time label for CPU logs
+  - Use existing UI Kit, if any
+  - Find a better overload/recover UI, e.g.: another type of chart

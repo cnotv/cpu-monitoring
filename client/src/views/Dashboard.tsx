@@ -4,9 +4,9 @@ import './Dashboard.css';
 import Card from '../components/Card';
 import Chart from '../components/Chart';
 import Logs from '../components/Logs';
-import { getCpuStats, initCpuStats } from '../utilities/Api';
+import { getCpu, getCpuStats, initCpuStats } from '../utilities/Api';
 
-import { cpuCheckInterval,cpuThresholdValue } from '../utilities/Cpu';
+import { cpuCheckInterval, cpuConfig, cpuThresholdValue } from '../utilities/Cpu';
 
 function Dashboard() {
   const [cpuStats, setCpuStats] = useState<CpuStats>(initCpuStats);
@@ -15,7 +15,10 @@ function Dashboard() {
    * Calculate all the required values, based on the single request
    */
   const updateDashboard = async (): Promise<void> => {
-    setCpuStats(await getCpuStats(initCpuStats.logs))
+    await getCpu().then(
+      value => {
+        setCpuStats(getCpuStats(value, initCpuStats.logs, cpuConfig))
+      })
   }
 
   useEffect(() => {

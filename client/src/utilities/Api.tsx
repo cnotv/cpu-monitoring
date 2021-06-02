@@ -1,9 +1,9 @@
-import { cpuLogSize, cpuThresholdTime, cpuThresholdValue, getNewLogs } from "./Cpu";
+import { cpuConfig, cpuLogSize, getNewLogs } from "./Cpu";
 
 export const initCpuStats: CpuStats = {
   current: 0,
   logs: {
-    cpu: Array(cpuLogSize).fill({}), // Initialize log for visual purposes
+    cpu: Array(cpuLogSize).fill({}), // Initialize log, exclusively for visual purposes
     heavy: [],
     recovered: [],
   },
@@ -19,44 +19,42 @@ export const getCpu = async (): Promise<number> => {
     .catch(() => 0);
 }
 
-export const getCpuStats = async ({ cpu, heavy, recovered }: CpuLogs): Promise<CpuStats> => {
-  return getCpu().then(
-    value => {
-      let isHeavy;
-      let isRecovered;
-      const newLog = { value, time: new Date().toLocaleString() };
-      cpu = getNewLogs(cpu, newLog, cpuLogSize);
+export const getCpuStats = (
+  value: number,
+  { cpu, heavy, recovered }: CpuLogs,
+  { logSize, thresholdValue, thresholdSize }: CpuConfig
+): CpuStats => {
+  let isHeavy = false;
+  let isRecovered = false;
+  const newLog = { value, time: new Date().toLocaleString() };
+  cpu = getNewLogs(cpu, newLog, logSize);
 
-      const higher = value > cpuThresholdValue;
-      const latestLogs = cpu.slice(0, cpuThresholdTime);
+  const higher = value > thresholdValue;
+  const latestLogs = cpu.slice(0, thresholdSize);
 
-      if (higher) {
-        isRecovered = false;
-        const isHeavyActive = latestLogs.every(log => log.value > cpuThresholdValue);
-        if (isHeavyActive) {
-          heavy = [...heavy, newLog]
-          isHeavy = true;
-        }
-      } else {
-        isHeavy = false;
-        const isRecoveredActive = latestLogs.every(log => log.value < cpuThresholdValue);
-        // Set it recovered, only if it has been an heavy load
-        if (isRecoveredActive && heavy.length) {
-          recovered = [...recovered, newLog]
-          isRecovered = true;
-        }
-      }
-
-      return {
-        current: value,
-        logs: {
-          cpu,
-          heavy,
-          recovered,
-        },
-        isHeavy,
-        isRecovered
-      } as CpuStats
+  if (higher) {
+    const isHeavyActive = latestLogs.every(log => log.value > thresholdValue);
+    if (isHeavyActive) {
+      heavy = [...heavy, newLog]
+      isHeavy = true;
     }
-  );
+  } else {
+    const isRecoveredActive = latestLogs.every(log => log.value < thresholdValue);
+    // Set it recovered, only if it has been an heavy load
+    if (isRecoveredActive && heavy.length) {
+      recovered = [...recovered, newLog]
+      isRecovered = true;
+    }
+  }
+
+  return {
+    current: value,
+    logs: {
+      cpu,
+      heavy,
+      recovered,
+    },
+    isHeavy,
+    isRecovered
+  } as CpuStats
 }
