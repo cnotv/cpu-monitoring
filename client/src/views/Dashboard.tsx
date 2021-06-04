@@ -8,7 +8,6 @@ import { getCpu } from '../utilities/Api';
 import { cpuCheckInterval, cpuConfig, cpuThresholdValue, initCpuStats } from '../config/cpu';
 import { getCpuStats } from '../utilities/Cpu';
 
-
 function Dashboard() {
   const [cpuStats, setCpuStats] = useState<CpuStats>(initCpuStats);
 
@@ -17,21 +16,18 @@ function Dashboard() {
    */
   const updateDashboard = async (): Promise<void> => {
     await getCpu().then(
-      value => {
-        setCpuStats(getCpuStats(value, cpuStats.logs, cpuConfig))
-      })
+      value => setCpuStats(getCpuStats(value, cpuStats.logs, cpuConfig)))
   }
 
   useEffect(() => {
     // Check CPU stats at every interval
-    const startCheck = setInterval(updateDashboard, cpuCheckInterval * 1000);
-    updateDashboard()
+    const startCheck = setTimeout(updateDashboard, cpuCheckInterval * 1000);
 
     return () => {
       // Remove timeout on destroy, to prevent memory leaks
       clearTimeout(startCheck)
     }
-  }, [])
+  })
 
   return (
     <main className="dashboard">
