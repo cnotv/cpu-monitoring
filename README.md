@@ -2,17 +2,29 @@
 
 Display CPU high load values.
 
+## Functionality
+
+After running both client and server, a state of the dashboard is created on page loaded, based on defined [configuration](client/src/config/cpu.tsx).
+
+It also contain an initial state, which will then be updated.
+
+The computation is done based on the size of the stored logs, defined in combination of the configuration of the project.
+
+Alerts will then be visualized as logs and eventually the card highlighted.
+
+Check [task requirements](/TASK.md) for further technical details.
+
 ## Start project
 
-The project is set to deploy and use independently both client and server.
+The project is set to deploy and use independently client and server.
 
-Remember to install packages for both the paths:
+Install packages:
 ```bash
 cd client && yarn
 cd server && yarn
 ```
 
-To launch the app do:
+Launch the app:
 ```bash
 yarn start:client
 yarn start:server
@@ -24,9 +36,12 @@ Client is built upon React, to provide hot-reloading modules, integrated transpi
 
 One of the main reason of this choice is, due to the small bundling size, possibility to bind markup and scripts using a MVVC pattern and split codebase in components.
 
+Rechart is then used as data viz, as it provides a simple configuration in React flavor.
+
 ## Server
 
-The configuration is a simple express RestAPI served though Express.
+The configuration is a simple express RestAPI endpoint, served though Express.
+
 No error handling is set.
 
 ## Further implementations
