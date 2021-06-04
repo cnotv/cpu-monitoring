@@ -4,9 +4,10 @@ import './Dashboard.css';
 import Card from '../components/Card';
 import Chart from '../components/Chart';
 import Logs from '../components/Logs';
-import { getCpu, getCpuStats, initCpuStats } from '../utilities/Api';
+import { getCpu } from '../utilities/Api';
+import { cpuCheckInterval, cpuConfig, cpuThresholdValue, initCpuStats } from '../config/cpu';
+import { getCpuStats } from '../utilities/Cpu';
 
-import { cpuCheckInterval, cpuConfig, cpuThresholdValue } from '../utilities/Cpu';
 
 function Dashboard() {
   const [cpuStats, setCpuStats] = useState<CpuStats>(initCpuStats);
@@ -17,11 +18,12 @@ function Dashboard() {
   const updateDashboard = async (): Promise<void> => {
     await getCpu().then(
       value => {
-        setCpuStats(getCpuStats(value, initCpuStats.logs, cpuConfig))
+        setCpuStats(getCpuStats(value, cpuStats.logs, cpuConfig))
       })
   }
 
   useEffect(() => {
+    // Check CPU stats at every interval
     const startCheck = setInterval(updateDashboard, cpuCheckInterval * 1000);
     updateDashboard()
 

@@ -40,6 +40,7 @@ Given more information about the scope of the project:
   - Add module federation, if Microfrontend
   - It may be bundled with Electron or such like, to create a desktop application
 - Code quality
+  - Lint and prettify code and style, including pre-commit and CI automation
   - Include error loggings for async requests
   - Add proper mocking libraries for testing
   - Set Web Worker to avoid continuous scripts on the main thread
